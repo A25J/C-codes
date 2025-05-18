@@ -23,3 +23,14 @@
 6. Enable and configure MPTCP at runtime:
     sudo sysctl -w net.mptcp.enabled=1
 
+to test mptcp, we need 2 paths, so creating a virtual ethernet interface is the option
+it is called veth: virtual ethernet interface
+to configure it: 
+    sudo ip link add veth0 type veth peer name veth1
+    sudo ip addr add 10.0.0.1/24 dev veth0
+    sudo ip addr add 10.0.0.2/24 dev veth1
+    sudo ip link set veth0 up
+    sudo ip link set veth1 up
+use one of the interfaces and wifi:
+    ip mptcp endpoint add 10.0.0.1 dev veth0 id 1
+    ip mptcp endpoint add <your_wifi_ip> dev wlan0 id 2 subflow
