@@ -1,0 +1,25 @@
+1.  check if kernel supports mptcp:
+    cat /boot/config-$(uname -r) | grep MPTCP
+    output should be: 
+        CONFIG_MPTCP=y
+        ONFIG_MPTCP_IPV6=y
+
+2. if MPTCP kernel is not enabled, install it:
+    sudo add-apt-repository ppa:mptcp/net-next
+    sudo apt update
+    sudo apt install linux-mptcp
+3. Reboot the device
+4. if the previous didn't work:
+    a. clone: git clone https://github.com/multipath-tcp/mptcp.git
+    b. move to the folder: cd mptcp
+    c. configure and compile:
+        make defconfig
+        make -j$(nproc)
+        sudo make modules_install
+        sudo make install
+    return to 3
+5. install iproute2: sudo apt install iproute2
+    to verify: ip mptcp
+6. Enable and configure MPTCP at runtime:
+    sudo sysctl -w net.mptcp.enabled=1
+
